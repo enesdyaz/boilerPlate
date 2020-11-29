@@ -1,0 +1,10 @@
+<template>
+<div>
+    dashboard<br>
+    dashboard<br>
+    dashboard<br>
+    dashboard<br>
+    dashboard<br>
+    dashboard<br>
+</div>
+</template>
