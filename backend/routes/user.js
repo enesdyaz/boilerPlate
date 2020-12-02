@@ -46,7 +46,7 @@ router.post('/signup', async (req, res, next)=>{
                 return next(err)
             }
             if(info){
-                return res.status(401).send(info.reason)
+                return res.send(info.reason)
             }
             return req.login(user, async (err)=>{    // 세션이 저장됨, 어떻게 저장할 것인지는 (serializerUser)로 user, done 매개변수와 함께 넘어감, 
                                                         //이 부분에 Header 임, 보통 user.id로 저장이 됨. 프론트에 쿠키 저장도 같이 해줌. 
@@ -74,7 +74,7 @@ router.post('/login', (req, res, next)=>{
             return next(err)
         }
         if(info){
-            return res.status(401).send(info.reason)
+            return res.send(info.reason)
         }
         return req.login(user, async (err)=>{    // 세션이 저장됨, 어떻게 저장할 것인지는 (serializerUser)로 user, done 매개변수와 함께 넘어감, 
                                                     //이 부분에 Header 임, 보통 user.id로 저장이 됨. 프론트에 쿠키 저장(connect.sid) 도 같이 해줌. 

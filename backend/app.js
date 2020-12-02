@@ -17,7 +17,7 @@ const userRouter = require('./routes/user')
 // const widgetRouter= require('./routes/widget')
 // const imageRouter = require('./routes/image')
 // const databaseRouter = require('./routes/database')
-// const postRouter = require('./routes/post')
+const postRouter = require('./routes/post')
 // const loadPostRouter = require('./routes/loadPost')
 
 //------------------------------------------------//
@@ -30,7 +30,7 @@ const cookie = require('cookie-parser')
 const app = express()
 app.use(morgan('dev'))
 
-db.sequelize.sync( ) // db 실행 {force:true}
+db.sequelize.sync() // db 실행 {force:true}
 
 
 app.use(express.json()) // express 가 json을 받기 위함
@@ -78,7 +78,7 @@ app.use('/user', userRouter)
 // app.use('/widget', widgetRouter) 
 
 // app.use('/database', databaseRouter)
-// app.use('/post', postRouter)
+app.use('/post', postRouter)
 // app.use('/loadpost', loadPostRouter)
 
 

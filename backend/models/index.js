@@ -13,8 +13,8 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 
 db.User = require('./User') (sequelize, Sequelize)  
 // db.Image = require('./Image') (sequelize, Sequelize)  
-// db.Post = require('./Post')(sequelize, Sequelize)  
-// db.Comment = require('./Comment')(sequelize, Sequelize)  
+db.Post = require('./Post')(sequelize, Sequelize)  
+db.Comment = require('./Comment')(sequelize, Sequelize)  
 // db.Hashtag = require('./hashtag')(sequelize, Sequelize)  
 
 
