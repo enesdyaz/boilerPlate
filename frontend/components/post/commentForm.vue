@@ -42,7 +42,6 @@ export default {
 
     methods:{
         onCommentSend(){
-            console.log('send Comment')
             this.$store.dispatch('post/createComment', {
                 commentContent: this.commentContent,
                 postId: this.postId

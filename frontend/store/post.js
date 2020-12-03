@@ -1,12 +1,15 @@
-
-
 export const state = () => ({
     postItem: [],
     commentItem: [],
+    imagePaths: [],
+
 })
 
+
+
+
+
 export const mutations = {
-//POST-MUTATION
     CREATE_POST(state, res){
         console.log('POST_MUTATION', res.data)
         state.postItem.unshift(res.data)
@@ -45,7 +48,23 @@ export const mutations = {
         state.commentItem.splice(index, 1)
     },
 
+
+    IMAGE_PATH(state, payload) {
+        state.imagePaths = state.imagePaths.concat(payload);
+    },
+    REMOVE_IMAGE_PATH(state, payload){
+        state.imagePaths.splice(payload, 1);
+    },
+    REMOVE_ALL_IMAGE_PATH(state){
+        state.imagePaths = []
+    }
+
 }
+
+
+
+
+
 
 export const actions= {
 
@@ -59,11 +78,15 @@ export const actions= {
         }
     },
 
-    async createPost({commit}, payload){
+    async createPost({commit, state}, payload){
         try{
-            const res =  await this.$axios.post('/post/createPost', payload, {withCredentials: true})
-            console.log(res.data)
+            const res =  await this.$axios.post('/post/createPost', {
+                postContent: payload.postContent,
+                src: state.imagePaths
+            }, {withCredentials: true})
+            console.log('create-Post response', res.data)
             commit('CREATE_POST', res)
+            commit('REMOVE_ALL_IMAGE_PATH')
         }catch(err){
             console.log(err)
         }
@@ -109,5 +132,21 @@ export const actions= {
             console.log(err)
         }
     },
+
+
+
+    uploadImages({ commit }, payload) {
+        console.log('uploadImages-actions', payload)
+        this.$axios.post('/post/images', payload, {
+        withCredentials: true,
+        })
+        .then((res) => {
+            commit('IMAGE_PATH', res.data);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+    },
+
 
 }

@@ -3,15 +3,13 @@
     <!-- DISPLAY -->
 <v-container>
 <!-- carousel image -->
-<div>
-</div>
     <div class='wrap' v-for="post in postItem" :key='post.id'>  
-
-        <!-- <v-carousel :continuous="true"  :show-arrows="true" height="300" delimiter-icon="mdi-circle-medium">
-                <v-carousel-item v-for="p in post.Images" :key='p.id' touch :src="`http://localhost:3071/${p.src}`" >
-                </v-carousel-item>
-        </v-carousel> -->
-
+            <div v-if="post.Images.length">
+            <v-carousel :continuous="true"  :show-arrows="true" height="300" delimiter-icon="mdi-circle-medium">
+                    <v-carousel-item v-for="p in post.Images" :key='p.id' touch :src="`http://localhost:3085/${p.src}`"></v-carousel-item>
+            </v-carousel>
+            </div>
+            
         <v-list expand three-line>
             <v-list-item>
                 <v-list-item-content>
@@ -19,7 +17,6 @@
                     <div style='margin-top: 5px;'>
                             <text-more :postContent="post.postContent"></text-more>
                             <br>
-
 <!-- time and navi -->                            
                             <div style='color: rgba(0,0,0,0.4);font-size: 0.8rem; display: inline-block'>{{timeForToday(post.createdAt)}}</div>
                             <div style='float: right;'>
@@ -77,7 +74,6 @@ export default {
 
     methods:{
         onCommentToggle(id){
-            console.log('this.commentToggle')
             this.commentToggle = !this.commentToggle
         },
         onRemovePost(id){
@@ -91,11 +87,9 @@ export default {
         },
     
         removeImage(index){
-            console.log(index)
             this.$store.commit('posts/removeImagePath', index)
         },
         onClickIcon(){
-            console.log('click')
         },
         onCommentSend(){
             this.$store.dispatch('posts/addComment', {

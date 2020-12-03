@@ -56,7 +56,6 @@ export default {
     methods:{
    
         onRemovePost(id){
-            console.log(id)
             this.$store.dispatch('post/removeComment', {
                 commentId: id
             })
