@@ -38,12 +38,7 @@ router.post('/images', isLoggedIn, upload.array('image'), (req, res, next) => {
 router.get('/loadPost', async(req, res, next)=>{   // GET /postLoad?offset=10&limit=10   --get 요청시 쿼리를 사용할수 있다 
     try{
         const posts = await db.Post.findAll({
-            // include: [{
-            //     model: db.User,
-            //     attributes: [
-            //         'id', 'username', 'email'
-            //     ]
-            // }],
+            include: [{  model: db.Comment }, {model: db.User, attributes: ['id', 'username', 'email']}],
             // include: [{
             //     model: db.Image
             // }],
@@ -69,7 +64,12 @@ router.post('/createPost', isLoggedIn, async(req, res, next)=>{
             postContent: req.body.postContent,
             UserId: req.user.id
         })
-        res.json(newPost)
+        const fullPost = await db.Post.findOne({
+            where: { id: newPost.id },
+            include: [{  model: db.Comment }, {model: db.User, attributes: ['id', 'username', 'email']}],
+            order: [['createdAt', 'DESC'], ['updatedAt','ASC']]
+        })
+        res.json(fullPost)
     }
     catch(err){
         next(err)
@@ -187,6 +187,22 @@ router.get('/:id/loadComment', async (req, res, next) => {
     }
 });
 
+
+
+
+router.delete('/:id/removeComment', async(req, res, next)=>{
+    try{
+        const removeComment = await db.Comment.destroy({
+            where:{
+                id: req.params.id
+            }
+        })
+        console.log(removeComment)
+        res.json('deleted')
+    }catch(err){
+        next(err)
+    }
+})
 
 
 router.post('/:id/createComment', isLoggedIn, async(req, res, next)=>{  // id-param

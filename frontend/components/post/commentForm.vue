@@ -1,18 +1,19 @@
 <template>
 <div>
     <div style='margin-left: -10px;'>
-        <v-btn x-small text color='blue-grey' @click='onToggle()'>comment</v-btn>
+        <v-btn x-small text color='blue-grey' @click='onToggle()'>comment ({{postComment.length}}) </v-btn>
     </div>
-
+    <transition name='fade'>
     <div v-if='toggle'>
         <v-textarea class='pt-2 body-2' color='blue-grey' rows='1' auto-grow label='comment' v-model='commentContent' hide-details outlined dense
         :append-outer-icon="commentContent ? 'mdi-comment-plus-outline' : 'mdi-comment-processing-outline'"
         @click:append-outer="onCommentSend">
         </v-textarea> 
         <div>
-            <comment-view :post="postId"></comment-view>
+            <comment-view :post="postId" ></comment-view>
         </div>
     </div>
+    </transition>
  
 </div>
 </template>
@@ -23,6 +24,9 @@ export default {
         postId:{
             type: Number,
             requried: true
+        },
+        postComment:{
+            type: Array,
         }
     },
     components:{
@@ -34,6 +38,8 @@ export default {
             toggle: false,
         }
     },
+
+
     methods:{
         onCommentSend(){
             console.log('send Comment')
@@ -51,3 +57,11 @@ export default {
     }
 }
 </script>
+<style lang="scss">  //전역 설정
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+}
+</style>

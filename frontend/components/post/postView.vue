@@ -38,7 +38,7 @@
                         </div>
                     </div>
                     <div>
-                        <comment-form :postId="post.id"></comment-form>
+                        <comment-form :postId="post.id" :postComment="post.Comments"></comment-form>
                     </div>
 
                 </v-list-item-content>

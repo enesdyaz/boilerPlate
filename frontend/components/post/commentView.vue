@@ -17,12 +17,12 @@
                     <div class='pl-4 blue-grey--text' style='clear: both'>{{timeForToday(item.createdAt)}} <span><v-btn x-small text color='blue-grey'> REPLY</v-btn></span>
                     <v-menu style='display: inline-block;' :close-on-content-click="true" dense :nudge-width="60"  offset-y >
                         <template v-slot:activator="{ on, attrs }">
-                            <v-icon v-bind="attrs" v-on="on" class='ml-4' style='font-size: 1.2rem;'>mdi-dots-horizontal</v-icon>
+                            <v-icon v-bind="attrs" v-on="on" class=' caption' color='blue-grey' style='font-size: 1.2rem;'>mdi-dots-horizontal</v-icon>
                         </template>
 
                         <div class='text-left pr-4' style='background: whitesmoke;'>
-                            <v-btn x-small @click='onRemovePost(post.id)' text><v-icon style='font-size: 1rem;padding-right: 4px;'>mdi-trash-can-outline</v-icon> REMOVE</v-btn><br>
-                            <v-btn x-small @click='onEditPost(post.id)' text><v-icon style='font-size: 1rem;padding-right: 4px;'>mdi-pencil-outline</v-icon> EDIT</v-btn>
+                            <v-btn x-small @click='onRemovePost(item.id)' text><v-icon style='font-size: 1rem;padding-right: 4px;'>mdi-trash-can-outline</v-icon> REMOVE</v-btn><br>
+                            <v-btn x-small @click='onEditPost(item.id)' text><v-icon style='font-size: 1rem;padding-right: 4px;'>mdi-pencil-outline</v-icon> EDIT</v-btn>
                         </div>
                     </v-menu>
                     </div>
@@ -43,7 +43,7 @@ export default {
         post:{
             type: Number,
             required: true
-        }
+        },
     },
     created(){
         this.$store.dispatch('post/loadComment', {
@@ -54,6 +54,14 @@ export default {
         ...mapState('post', ['commentItem'])
     },
     methods:{
+   
+        onRemovePost(id){
+            console.log(id)
+            this.$store.dispatch('post/removeComment', {
+                commentId: id
+            })
+        },
+
         timeForToday(value) {
         const today = new Date();
         const timeValue = new Date(value);

@@ -8,16 +8,16 @@
         </div>
         <div class='text-center'>
         <v-form @submit.prevent='onSubmit'  ref='form'> 
-                <div class='text-center'>
-                    <v-textarea  style='width: 90%; margin: 0 auto; font-size: 0.9rem;line-height: 6px;' 
-                    @input='onChangeTextArea' row-height="12" dense hide-details 
-                    v-model='text' color='blue-grey' auto-grow outlined clearable >
-                    </v-textarea>
-                </div>
-                <br>
-                <div class='text-center'>
-                    <v-btn color='blue-grey white--text' :disabled="lengthCheck(text).length < 5" type='submit' small>POST</v-btn>
-                </div>
+            <div class='text-center'>
+                <v-textarea  style='width: 90%; margin: 0 auto; font-size: 0.9rem;line-height: 6px;' 
+                @input='onChangeTextArea' row-height="12" dense hide-details 
+                v-model='text' color='blue-grey' auto-grow outlined clearable >
+                </v-textarea>
+            </div>
+            <br>
+            <div class='text-center'>
+                <v-btn color='blue-grey white--text' :disabled="lengthCheck(text).length < 5" type='submit' small>POST</v-btn>
+            </div>
         </v-form>
     </div>
     </div>

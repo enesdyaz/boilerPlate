@@ -1,5 +1,5 @@
 <template>
-<div style='white-space: pre-line:'>
+<div class='body-2' style='white-space: pre-line:'>
     <div v-if="postContent.length > 100 " >
         {{postContent.substr(0, len)}} <span style='cursor: pointer;' v-if="len<1000" @click="len=1000">... more</span>
     </div>

@@ -8,15 +8,8 @@ export const state = () => ({
 export const mutations = {
 //POST-MUTATION
     CREATE_POST(state, res){
-        console.log('POST_MUTATION', res)
-        state.postItem.unshift({
-            UserId: res.data.UserId,
-            id: res.data.id,
-            postContent: res.data.postContent,
-            createdAt: res.data.createdAt,
-            updatedAt:res.data.updatedAt,
-            comment: []
-        })
+        console.log('POST_MUTATION', res.data)
+        state.postItem.unshift(res.data)
     },
     LOAD_POST(state, res){
         console.log('LOAD_POST', res.data)
@@ -30,15 +23,28 @@ export const mutations = {
         state.postItem.splice(index, 1)
     },
 
-//COMMENT-MUTATION
-    CREATE_COMMENT(state, res){
-        state.commentItem.unshift(res.data)
+    CREATE_COMMENT(state, payload){
+        state.commentItem.unshift(payload.data)
+
+        console.log('CREATE_COMMENT',payload)
+        const index = state.postItem.findIndex(v => v.id === payload.data.PostId);
+        console.log('index=', index)
+
+        state.postItem[index].Comments.unshift(payload.data)
     },
 
     LOAD_COMMENT(state, res){
         console.log('LOAD_COMMENT', res)
         state.commentItem = res.data
-    }
+    },
+    REMOVE_COMMENT(state, payload){
+        console.log(payload.commentId)
+        const index = state.commentItem.findIndex(v => v.id === payload.commentId);
+        console.log('index_number', index)
+
+        state.commentItem.splice(index, 1)
+    },
+
 }
 
 export const actions= {
@@ -46,7 +52,7 @@ export const actions= {
     async loadPost({commit}, payload){
         try{
             const res =  await this.$axios.get('/post/loadPost', {withCredentials: true})
-            console.log('loadpost', res.data)
+            console.log('load_post', res.data)
             commit('LOAD_POST', res)
         }catch(err){
             console.log(err)
@@ -92,6 +98,16 @@ export const actions= {
         }catch(err){
             console.log(err)
         }
-    }
+    },
+
+    async removeComment({commit}, payload){
+        try{
+            console.log('removeComment', payload.commentId)
+            const res = await this.$axios.delete(`/post/${payload.commentId}/removeComment`,  {withCredentials: true})
+            commit('REMOVE_COMMENT', payload)
+        }catch(err){
+            console.log(err)
+        }
+    },
 
 }

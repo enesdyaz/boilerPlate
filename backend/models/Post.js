@@ -4,11 +4,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        comment: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-        }
-
     },
     {   // user의 설정 부분
         charset: 'utf8mb4', // 한국어, 이모티콘 사용가능
