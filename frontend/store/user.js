@@ -4,16 +4,13 @@ export const state = () => ({
 
 export const mutations = {
     SET_ME(state, payload){
-        console.log('setMe', payload)
         state.me = payload
         console.log('stateMe', state.me)
     }
 }
 
 export const actions = {
-
     async loadUser({ state, commit }) {
-        console.log('refresh')
     try {
         const res = await this.$axios.get('/user', {
         withCredentials: true,

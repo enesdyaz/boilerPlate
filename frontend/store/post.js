@@ -1,7 +1,10 @@
+import throttle from 'lodash.throttle'
+
 export const state = () => ({
     postItem: [],
     commentItem: [],
     imagePaths: [],
+    morePost: true,
 
 })
 
@@ -11,40 +14,35 @@ export const state = () => ({
 
 export const mutations = {
     CREATE_POST(state, res){
-        console.log('POST_MUTATION', res.data)
         state.postItem.unshift(res.data)
     },
+
     LOAD_POST(state, res){
         console.log('LOAD_POST', res.data)
-        state.postItem = res.data
+        console.log('STATE_Post', state.postItem)
+        state.postItem = state.postItem.concat(res.data)
         console.log('STATE_POST', state.postItem)
 
     },
+
+
+
     REMOVE_POST(state, payload){
-        console.log('index', payload)
         const index = state.postItem.findIndex(v => v.id === payload.postId);
         state.postItem.splice(index, 1)
     },
 
     CREATE_COMMENT(state, payload){
         state.commentItem.unshift(payload.data)
-
-        console.log('CREATE_COMMENT',payload)
         const index = state.postItem.findIndex(v => v.id === payload.data.PostId);
-        console.log('index=', index)
-
         state.postItem[index].Comments.unshift(payload.data)
     },
 
     LOAD_COMMENT(state, res){
-        console.log('LOAD_COMMENT', res)
         state.commentItem = res.data
     },
     REMOVE_COMMENT(state, payload){
-        console.log(payload.commentId)
         const index = state.commentItem.findIndex(v => v.id === payload.commentId);
-        console.log('index_number', index)
-
         state.commentItem.splice(index, 1)
     },
 
@@ -68,15 +66,20 @@ export const mutations = {
 
 export const actions= {
 
-    async loadPost({commit}, payload){
-        try{
-            const res =  await this.$axios.get('/post/loadPost', {withCredentials: true})
-            console.log('load_post', res.data)
-            commit('LOAD_POST', res)
-        }catch(err){
-            console.log(err)
+    loadPost: throttle( async function({commit, state}, payload){
+        if(state.morePost){
+            try{
+                console.log('action 진입')
+                const lastPost = state.postItem[state.postItem.length -1] // 마지막 게시물
+                console.log('last Post ', lastPost && lastPost.id)
+                const res =  await this.$axios.get(`/post/loadPost?lastId=${lastPost && lastPost.id}&limit=5`, {withCredentials: true})
+                console.log(res)
+                commit('LOAD_POST', res)
+            }catch(err){
+            }
         }
-    },
+        
+    }, 3000),  //같은 함수를 3초 안에 다시 진행하지 못함
 
     async createPost({commit, state}, payload){
         try{
@@ -84,7 +87,6 @@ export const actions= {
                 postContent: payload.postContent,
                 src: state.imagePaths
             }, {withCredentials: true})
-            console.log('create-Post response', res.data)
             commit('CREATE_POST', res)
             commit('REMOVE_ALL_IMAGE_PATH')
         }catch(err){
@@ -105,7 +107,6 @@ export const actions= {
 //COMMENT
     async createComment({commit}, payload){
         try{
-            console.log('createComment', payload)
             const res =  await this.$axios.post(`/post/${payload.postId}/createComment`, payload, {withCredentials: true})
             commit('CREATE_COMMENT', res)
         }catch(err){
@@ -115,7 +116,6 @@ export const actions= {
     
     async loadComment({commit}, payload){
         try{
-            console.log('loadComment', payload)
             const res = await this.$axios.get(`/post/${payload.postId}/loadComment`,  {withCredentials: true})
             commit('LOAD_COMMENT', res)
         }catch(err){
@@ -125,7 +125,6 @@ export const actions= {
 
     async removeComment({commit}, payload){
         try{
-            console.log('removeComment', payload.commentId)
             const res = await this.$axios.delete(`/post/${payload.commentId}/removeComment`,  {withCredentials: true})
             commit('REMOVE_COMMENT', payload)
         }catch(err){
@@ -136,7 +135,6 @@ export const actions= {
 
 
     uploadImages({ commit }, payload) {
-        console.log('uploadImages-actions', payload)
         this.$axios.post('/post/images', payload, {
         withCredentials: true,
         })

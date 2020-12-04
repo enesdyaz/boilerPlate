@@ -27,12 +27,8 @@
                             </v-carousel>
                     </div>
                 </div>
-
-
-
-
                 <v-textarea  style='width: 90%; margin: 0 auto; font-size: 0.9rem;line-height: 6px;' 
-                 row-height="12" dense hide-details 
+                row-height="12" dense hide-details 
                 v-model='text' color='blue-grey' auto-grow outlined clearable >
                 </v-textarea>
             </div>

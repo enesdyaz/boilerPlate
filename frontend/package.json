@@ -11,12 +11,14 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.12.2",
     "core-js": "^3.6.5",
-    "nuxt": "^2.14.6"
+    "lodash.throttle": "^4.1.1",
+    "nuxt": "^2.14.6",
+    "vue-infinite-loading": "^2.4.5"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.2"
   },
-  "config":{
+  "config": {
     "nuxt": {
       "port": 3000
     }

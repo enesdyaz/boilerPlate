@@ -40,13 +40,24 @@ router.post('/images', isLoggedIn, upload.array('image'), (req, res, next) => {
 // POST text CRUD  , imagepath
 //-------------------------------------
 
-router.get('/loadPost', async(req, res, next)=>{   // GET /postLoad?offset=10&limit=10   --get 요청시 쿼리를 사용할수 있다 
+router.get('/loadPost', async(req, res, next)=>{   // GET /postLoad?offset=10&limit=10   --get 요청시 사용, 10개 이후 10개를 가져와라 
     try{
+        let where = {}   
+        if(parseInt(req.query.lastId, 10)){
+            where = {
+                id: {
+                    [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10)  // less than 6 // req.query.lastId=6 
+                }
+            }
+        }
+
         const posts = await db.Post.findAll({
+            where,
             include: [{  model: db.Comment }, {model: db.User, attributes: ['id', 'username', 'email']}, {model: db.Image}],
-            order: [['createdAt', 'DESC'], ['updatedAt','ASC']]
-            // limit: req.query.limit,
-            // offset: req.query.offset
+            order: [['createdAt', 'DESC'], ['updatedAt','ASC']],
+            // offset: parseInt(req.query.offset, 10) ,
+            limit: parseInt(req.query.limit, 10) 
+            
         })
         res.json(posts)
 

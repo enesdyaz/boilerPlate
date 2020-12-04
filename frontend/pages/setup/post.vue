@@ -2,9 +2,9 @@
     <div>
         <div :class='{active: !isActive}' class='leftBox' style='overflow:auto; height: 100vh;'>
             <post-form></post-form>
-            <post-view></post-view>
+            <post-view :postItems="postItem"></post-view>
+            <spinner :loading='true'></spinner>
             
-
         </div>
 
         <div class='rightBox'>
@@ -31,8 +31,9 @@
 <script>
 // import MobilePhone from '../../components/setup/MobileIphone'
 import postForm from '../../components/post/postform'
-// import postView from '../../components/setup/post/postView'
-
+import postView from '../../components/post/postView'
+import {mapState} from 'vuex'
+import spinner from '../../components/spinner'
 export default {
     data() {
         return {
@@ -42,25 +43,42 @@ export default {
     components: {
         // MobilePhone,
         postForm,
-        // postView, 
-
+        postView, 
+        spinner,
     },
     fetch({store}){
-        return store.dispatch('post/loadPost')
-    },
-    methods: {
-        admin(){
-        this.isActive = true;
-        },
-        view(){
-        this.isActive = false
-        }
+        console.log('fetch 작동되나?')
+        return store.dispatch('post/loadPost', { reset: true })
     },
     computed:{
-        // postView(){
-        //     return this.$store.state.posts.postView
-        // }
+        ...mapState('post', ['postItem']),
+        ...mapState('post', ['morePost'])
     },
+
+    // mounted() {
+    //     window.addEventListener('scroll', this.onScroll);
+    // },
+    // beforeDestroy() {
+    //     window.removeEventListener('scroll', this.onScroll);
+    // },
+    methods: {
+        admin(){
+            this.isActive = true;
+        },
+        view(){
+            this.isActive = false
+        },
+    //     onScroll() {
+    //         console.log('scroll');
+    //             if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 100) {
+    //             if (this.morePost) {
+    //                 console.log('loadPost')
+    //                 this.$store.dispatch('post/loadPost');
+    //             }
+    //         }
+    //   },
+    },
+
 
 }
 </script>

@@ -3,12 +3,16 @@
     <!-- DISPLAY -->
 <v-container>
 <!-- carousel image -->
-    <div class='wrap' v-for="post in postItem" :key='post.id'>  
+    <div class='wrap' v-for="post in postItems" :key='post.id'> 
+        <transition name="fade">
             <div v-if="post.Images.length">
-            <v-carousel :continuous="true"  :show-arrows="true" height="300" delimiter-icon="mdi-circle-medium">
-                    <v-carousel-item v-for="p in post.Images" :key='p.id' touch :src="`http://localhost:3085/${p.src}`"></v-carousel-item>
+            <v-carousel :continuous="false"  :show-arrows="true" height="300" delimiter-icon="mdi-circle-medium">
+                    <v-carousel-item v-for="p in post.Images" :key='p.id' touch :src="`http://localhost:3085/${p.src}`">
+                    </v-carousel-item>
             </v-carousel>
             </div>
+          </transition>
+
             
         <v-list expand three-line>
             <v-list-item>
@@ -43,6 +47,9 @@
         </v-list>
     </div>
 </v-container>
+<client-only>
+<infinite-loading    spinner="spiral"    @infinite="infiniteScroll" ></infinite-loading>
+</client-only>
 <hr>
 </div>
 </template>
@@ -51,8 +58,9 @@
 import {mapState} from 'vuex'
 import commentForm from '../post/commentForm'
 import textMore from '../post/textMore'
-// import carousel from '../../setup/post/carousel'
+
 export default {
+    props:['postItems'],
     components:{
         // carousel,
         commentForm,
@@ -69,10 +77,18 @@ export default {
         }
     },
     computed:{
-        ...mapState('post', ['postItem'])
+        ...mapState('post', ['morePost'])
+
     },
 
     methods:{
+        infiniteScroll(){
+            console.log('a')
+            if (this.morePost) {
+                console.log('loadPost')
+                this.$store.dispatch('post/loadPost');
+            }
+        },
         onCommentToggle(id){
             this.commentToggle = !this.commentToggle
         },
@@ -97,31 +113,50 @@ export default {
             })
         },
         timeForToday(value) {
-        const today = new Date();
-        const timeValue = new Date(value);
+            const today = new Date();
+            const timeValue = new Date(value);
 
-        const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
-        if (betweenTime < 1) return 'Just before';
-        if (betweenTime < 60) {
-            return `${betweenTime} minutes ago`;
-        }
+            const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
+            if (betweenTime < 1) return 'Just before';
+            if (betweenTime < 60) {
+                return `${betweenTime} minutes ago`;
+            }
 
-        const betweenTimeHour = Math.floor(betweenTime / 60);
-        if (betweenTimeHour < 24) {
-            return `${betweenTimeHour} hours ago`;
-        }
+            const betweenTimeHour = Math.floor(betweenTime / 60);
+            if (betweenTimeHour < 24) {
+                return `${betweenTimeHour} hours ago`;
+            }
 
-        const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
-        if (betweenTimeDay < 365) {
-            return `${betweenTimeDay} days ago`;
-        }
+            const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+            if (betweenTimeDay < 365) {
+                return `${betweenTimeDay} days ago`;
+            }
 
-        return `${Math.floor(betweenTimeDay / 365)} years ago`;
- }
+            return `${Math.floor(betweenTimeDay / 365)} years ago`;
+        },
+    
     },
+
 }
 </script>
 
-<style>
+<style scoped>
+.list-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.list-enter-active, .list-leave-active {
+  transition: all 4s;
+}
+.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateX(90px);
+}
 
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 </style>
