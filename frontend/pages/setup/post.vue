@@ -3,7 +3,7 @@
         <div :class='{active: !isActive}' class='leftBox' style='overflow:auto; height: 100vh;'>
             <post-form></post-form>
             <post-view :postItems="postItem"></post-view>
-            <spinner :loading='true'></spinner>
+            <!-- <spinner :loading='true'></spinner> -->
             
         </div>
 
@@ -33,7 +33,7 @@
 import postForm from '../../components/post/postform'
 import postView from '../../components/post/postView'
 import {mapState} from 'vuex'
-import spinner from '../../components/spinner'
+// import spinner from '../../components/spinner'
 export default {
     data() {
         return {
@@ -44,7 +44,7 @@ export default {
         // MobilePhone,
         postForm,
         postView, 
-        spinner,
+        // spinner,
     },
     fetch({store}){
         console.log('fetch 작동되나?')
@@ -52,7 +52,6 @@ export default {
     },
     computed:{
         ...mapState('post', ['postItem']),
-        ...mapState('post', ['morePost'])
     },
 
     // mounted() {

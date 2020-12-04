@@ -4,12 +4,8 @@ export const state = () => ({
     postItem: [],
     commentItem: [],
     imagePaths: [],
-    morePost: true,
 
 })
-
-
-
 
 
 export const mutations = {
@@ -19,7 +15,6 @@ export const mutations = {
 
     LOAD_POST(state, res){
         console.log('LOAD_POST', res.data)
-        console.log('STATE_Post', state.postItem)
         state.postItem = state.postItem.concat(res.data)
         console.log('STATE_POST', state.postItem)
 
@@ -66,20 +61,17 @@ export const mutations = {
 
 export const actions= {
 
-    loadPost: throttle( async function({commit, state}, payload){
-        if(state.morePost){
+    async loadPost({commit, state}, payload){
             try{
                 console.log('action 진입')
                 const lastPost = state.postItem[state.postItem.length -1] // 마지막 게시물
                 console.log('last Post ', lastPost && lastPost.id)
                 const res =  await this.$axios.get(`/post/loadPost?lastId=${lastPost && lastPost.id}&limit=5`, {withCredentials: true})
-                console.log(res)
                 commit('LOAD_POST', res)
+                return res.data.length
             }catch(err){
-            }
-        }
-        
-    }, 3000),  //같은 함수를 3초 안에 다시 진행하지 못함
+            }        
+    },  
 
     async createPost({commit, state}, payload){
         try{

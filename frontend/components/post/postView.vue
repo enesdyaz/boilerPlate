@@ -41,16 +41,16 @@
                     <div>
                         <comment-form :postId="post.id" :postComment="post.Comments"></comment-form>
                     </div>
-
                 </v-list-item-content>
             </v-list-item>
         </v-list>
     </div>
 </v-container>
 <client-only>
-<infinite-loading    spinner="spiral"    @infinite="infiniteScroll" ></infinite-loading>
+<infinite-loading    spinner="circles"    @infinite="infiniteScroll" ></infinite-loading>
 </client-only>
 <hr>
+   
 </div>
 </template>
 
@@ -74,20 +74,26 @@ export default {
             postText: '',
             len: 120,
             commentToggle: false,
-        }
-    },
-    computed:{
-        ...mapState('post', ['morePost'])
 
+        }
     },
 
     methods:{
-        infiniteScroll(){
-            console.log('a')
-            if (this.morePost) {
-                console.log('loadPost')
-                this.$store.dispatch('post/loadPost');
-            }
+        infiniteScroll($state){
+            console.log('Infinite Loading')
+
+            setTimeout(() => {
+                this.$store.dispatch('post/loadPost')
+
+            .then((response) => {
+                console.log(response)
+                if (response > 1) {
+                $state.loaded()
+                } else {
+                $state.complete()
+                }
+                }).catch((err) => {console.log(err)})
+                }, 3000)
         },
         onCommentToggle(id){
             this.commentToggle = !this.commentToggle

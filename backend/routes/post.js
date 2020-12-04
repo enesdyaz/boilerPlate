@@ -40,6 +40,7 @@ router.post('/images', isLoggedIn, upload.array('image'), (req, res, next) => {
 // POST text CRUD  , imagepath
 //-------------------------------------
 
+
 router.get('/loadPost', async(req, res, next)=>{   // GET /postLoad?offset=10&limit=10   --get 요청시 사용, 10개 이후 10개를 가져와라 
     try{
         let where = {}   
